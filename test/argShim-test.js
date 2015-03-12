@@ -128,7 +128,7 @@ describe('argShim', function() {
     });
   });
 
-  describe('Calls with mixed args ', function() {
+  describe('Calls with mixed args', function() {
     it('should call the wrapped function with the mixed arguments', function(done) {
       var expectedArgs = [ undefined, 'a string', undefined, 42 ];
       var wrapped = argShim([{optional:'String'}, {required:'String'}, {optional:'Number'}, {required:'Number'}], function() {
@@ -166,6 +166,16 @@ describe('argShim', function() {
           wrapped.apply(this, argSet);
         });
       });
+      done();
+    });
+  });
+
+  describe('Function behaviour', function() {
+    it('should return the value from wrapped function', function(done) {
+      var wrapped = argShim([], function() {
+        return 'the value from wrapped function';
+      });
+      should(wrapped()).equal('the value from wrapped function');
       done();
     });
   });

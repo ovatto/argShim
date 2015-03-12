@@ -58,11 +58,9 @@ function argShim(argSpecs, actualFunction) {
           realArgs.push(undefined);
         }
       }
-      actualFunction.apply(this, realArgs);
+      return actualFunction.apply(this, realArgs);
     }
-    else {
-      throw new Error('Invalid call. Does not match pattern '+signaturePattern+'.');
-    }
+    throw new Error('Invalid call. Does not match pattern '+signaturePattern+'.');
   };
 }
 
