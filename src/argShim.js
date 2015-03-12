@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 function classOf(obj) {
   return Object.prototype.toString.call(obj).match(/\s(\w+)/)[1];
@@ -24,7 +24,7 @@ function getCallSignature(callArguments) {
 
 function getSignaturePattern(argSpecs) {
   var signaturePattern = "^";
-  argSpecs.forEach(function(argSpec, index) {
+  argSpecs.forEach(function(argSpec) {
     signaturePattern += argPattern(argSpec);
   });
   signaturePattern += "$";
