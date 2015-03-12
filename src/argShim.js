@@ -11,9 +11,15 @@ function argPattern(argSpec, index) {
                     ' while specifying optional '+argSpec.optional+'.');
   }
   if(argSpec.required) {
+    if(typeof argSpec.required !== 'string') {
+      throw new Error('Invalid required type at index '+index+'.');
+    }
     return "("+argSpec.required+":([0-9]+))";
   }
-  else if(argSpec.optional) {
+  if(argSpec.optional) {
+    if(typeof argSpec.optional !== 'string') {
+      throw new Error('Invalid required type at index '+index+'.');
+    }
     return "("+argSpec.optional+":([0-9]+))?";
   }
   throw new Error('Invalid argument spec at index '+index+': missing either required or optional type.');

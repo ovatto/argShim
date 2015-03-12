@@ -29,6 +29,18 @@ describe('argShim', function() {
       });
       done();
     });
+    it('should when "optional" property is not a string', function(done) {
+      should.throws(function() {
+        argShim([{optional:{}}], function(){});
+      });
+      done();
+    });
+    it('should when "required" property is not a string', function(done) {
+      should.throws(function() {
+        argShim([{required:{}}], function(){});
+      });
+      done();
+    });
   });
 
   describe('Calls with no args (for sake of API completeness)', function() {
