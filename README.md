@@ -4,7 +4,7 @@ JavaScript module for handling properly typed optional function arguments.
 ## The problem
 
 Parsing the optional arguments on a JavaScript function call can be a complex process when
-number of arguments increases. Usually the code ends up looking.
+number of arguments increases. Usually the code ends up looking something like this:
 
 ```javascript
 function functionWithOptionalArgs(optString, optNumber, optFunction) {
