@@ -83,8 +83,9 @@ argShim(argSpecs, wrappedFunction)
 
 **argSpecs**:
 An array of objects that define the arguments for the resulting function. Each object must
-have either 1) **required** or 2) **optional** property and the property value defines the
-class that can be accepted as the parameter at the given slot.
+have either 1) **required** or 2) **optional** property and the property value must be a
+string that defines the name of the class for the object that can be accepted as the
+parameter at the given slot.
 
 **wrappedFunction**:
 Function that will be called with the parsed arguments.
