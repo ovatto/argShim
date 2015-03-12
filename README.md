@@ -3,7 +3,7 @@ Simple function shim that handles the optional argument processing.
 
 ## The problem
 
-Parsing the optional arguments on a JavaScript function calls can be a complex process when
+Parsing the optional arguments on a JavaScript function call can be a complex process when
 number of arguments increases. Usually the code ends up looking.
 
 ```javascript
@@ -81,18 +81,18 @@ argShim(argSpecs, wrappedFunction)
 
 ### Parameters
 
-**argSpecs**
-An array of objects that defined the arguments for the function. Each object must have
-either **required** or **optional** property and the property value defines the class
-that can be accepted as the parameter at the given slot.
+**argSpecs**:
+An array of objects that define the arguments for the resulting function. Each object must
+have either 1) **required** or 2) **optional** property and the property value defines the
+class that can be accepted as the parameter at the given slot.
 
-**wrappedFunction
+**wrappedFunction**:
 Function that will be called with the parsed arguments.
 
 ### Description
 
 The return value of the **argShim** call is a new function that will accept all calls
-that specify the required and optional parameters. Issues a valid call the function will
+that specify the required and optional parameters. Issued a valid call the function will
 call the wrapped function with a value for each parameter. Missing parameters will
 have value **undefined**.
 
