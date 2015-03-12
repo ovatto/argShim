@@ -1,0 +1,32 @@
+{
+  "name": "argShim",
+  "version": "0.0.1",
+  "description": "Simple function shim that handles the optional argument processing.",
+  "main": "argShim.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ovatto/argShim.git"
+  },
+  "keywords": [
+    "JavaScript",
+    "Function",
+    "Arguments",
+    "Optional"
+  ],
+  "author": {
+    "name": "Olli Vättö",
+    "email": "olli.vatto AT me.com"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ovatto/argShim/issues"
+  },
+  "homepage": "https://github.com/ovatto/argShim",
+  "devDependencies": {
+    "grunt": "~0.4.5"
+  },
+  "readmeFilename": "README.md"
+}
