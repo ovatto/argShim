@@ -1,7 +1,7 @@
 {
   "name": "argShim",
   "version": "0.0.1",
-  "description": "Simple function shim that handles the optional argument processing.",
+  "description": "JavaScript module for handling properly typed optional function arguments",
   "main": "src/argShim.js",
   "scripts": {
     "test": "grunt test"

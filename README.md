@@ -1,5 +1,5 @@
 # argShim
-Simple function shim that handles the optional argument processing.
+JavaScript module for handling properly typed optional function arguments.
 
 ## The problem
 
