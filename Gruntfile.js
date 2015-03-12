@@ -17,9 +17,17 @@ module.exports = function(grunt) {
       test: {
         src: ['test/**/*.js']
       }
+    },
+    simplemocha: {
+      options: {
+        ui: 'bdd',
+        reporter: 'spec'
+      },
+      all: { src: ['test/**/*-test.js'] }
     }
   });
 
+  grunt.loadNpmTasks('grunt-simple-mocha');
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.registerTask('default', 'test');
+  grunt.registerTask('default', ['jshint:all', 'simplemocha']);
 };

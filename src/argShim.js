@@ -4,14 +4,19 @@ function classOf(obj) {
   return Object.prototype.toString.call(obj).match(/\s(\w+)/)[1];
 }
 
-function argPattern(argSpec) {
+function argPattern(argSpec, index) {
+  if(argSpec.required && argSpec.optional) {
+    throw new Error('Conflicting argument spec at index '+index+
+                    ': required '+argSpec.required+
+                    ' while specifying optional '+argSpec.optional+'.');
+  }
   if(argSpec.required) {
     return "("+argSpec.required+":([0-9]+))";
   }
   else if(argSpec.optional) {
     return "("+argSpec.optional+":([0-9]+))?";
   }
-  return "";
+  throw new Error('Invalid argument spec at index '+index+': missing either required or optional type.');
 }
 
 function getCallSignature(callArguments) {
@@ -24,14 +29,20 @@ function getCallSignature(callArguments) {
 
 function getSignaturePattern(argSpecs) {
   var signaturePattern = "^";
-  argSpecs.forEach(function(argSpec) {
-    signaturePattern += argPattern(argSpec);
+  argSpecs.forEach(function(argSpec, index) {
+    signaturePattern += argPattern(argSpec, index);
   });
   signaturePattern += "$";
   return signaturePattern;
 }
 
 function argShim(argSpecs, actualFunction) {
+  if(!Array.isArray(argSpecs)) {
+    throw new Error("argSpecs must be an array.");
+  }
+  if(typeof actualFunction !== 'function') {
+    throw new Error("actualFunction must be a function.");
+  }
   var signaturePattern = getSignaturePattern(argSpecs);
   var regex = new RegExp(signaturePattern);
   return function() {
@@ -50,8 +61,7 @@ function argShim(argSpecs, actualFunction) {
       actualFunction.apply(this, realArgs);
     }
     else {
-      // Fail miserably
-      console.log("NO MATCH");
+      throw new Error('Invalid call. Does not match pattern '+signaturePattern+'.');
     }
   };
 }
