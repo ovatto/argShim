@@ -21,7 +21,7 @@ function argPattern(argSpec, index) {
   }
   if(argSpec.optional) {
     if(typeof argSpec.optional !== 'string') {
-      throw new Error('Invalid required type at index '+index+'.');
+      throw new Error('Invalid optional type at index '+index+'.');
     }
     if(argSpec.default && classOf(argSpec.default) !== argSpec.optional) {
       throw new Error('Argument at index expects type "'+argSpec.optional+'" but default value is a "'+classOf(argSpec.default)+'".');
