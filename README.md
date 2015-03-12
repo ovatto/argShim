@@ -87,6 +87,10 @@ have either 1) **required** or 2) **optional** property and the property value m
 string that defines the name of the class for the object that can be accepted as the
 parameter at the given slot.
 
+If argument is optional it can specify an additional property called **default** that
+will be passed instead of the **undefined** when optinal argument is missing from the
+call. The value must have the same type that was specified in the **optional** string.
+
 **wrappedFunction**:
 Function that will be called with the parsed arguments.
 
