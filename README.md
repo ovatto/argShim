@@ -71,6 +71,23 @@ fn(42, function(){});        // function called with undefined, 42, function
 fn('str', 42, function(){}); // function called with 'str', 42, function
 ```
 
+Default values for optional arguments can be specified with the **default** attribute:
+
+```javascript
+...
+var argSpecs = [
+  {optional:'String', default:'foo'},
+  {required:'Number'},
+  {optional:'Function'}
+];
+var fn = argShim(argSpecs, functionWithOptionalArgs);
+fn('str');                   // throws an error, required number is missing
+fn(42);                      // function called with 'foo', 42, undefined
+fn(function(){});            // throws an error, required number is missing
+fn(42, function(){});        // function called with 'foo', 42, function
+fn('str', 42, function(){}); // function called with 'str', 42, function
+```
+
 ## Module API
 
 The **argShim** module exports a single function that has the following signature:
@@ -85,11 +102,10 @@ argShim(argSpecs, wrappedFunction)
 An array of objects that define the arguments for the resulting function. Each object must
 have either 1) **required** or 2) **optional** property and the property value must be a
 string that defines the name of the class for the object that can be accepted as the
-parameter at the given slot.
-
-If argument is optional it can specify an additional property called **default** that
-will be passed instead of the **undefined** when optinal argument is missing from the
-call. The value must have the same type that was specified in the **optional** string.
+parameter at the given slot. If argument is optional it can specify an additional property
+called **default** that will be passed instead of the **undefined** when optional argument
+is missing from the call. The value must have the same type that was specified in the
+**optional** string.
 
 **wrappedFunction**:
 Function that will be called with the parsed arguments.
