@@ -26,11 +26,11 @@ function argPattern(argSpec, index) {
 }
 
 function getCallSignature(callArguments) {
-  var callPattern = "";
+  var callSignature = "";
   for(var i=0; i<callArguments.length; i++) {
-    callPattern += classOf(callArguments[i])+":"+i;
+    callSignature += classOf(callArguments[i])+":"+i;
   }
-  return callPattern;
+  return callSignature;
 }
 
 function getSignaturePattern(argSpecs) {
@@ -50,23 +50,23 @@ function argShim(argSpecs, actualFunction) {
     throw new Error("actualFunction must be a function.");
   }
   var signaturePattern = getSignaturePattern(argSpecs);
-  var regex = new RegExp(signaturePattern);
+  var signatureRegex = new RegExp(signaturePattern);
   return function() {
     var callSignature = getCallSignature(arguments);
-    var match = regex.exec(callSignature);
+    var match = signatureRegex.exec(callSignature);
     if(match) {
-      var realArgs = [];
+      var actualArgs = [];
       for(var index=2; index<match.length; index+=2) {
         if(match[index]) {
-          realArgs.push(arguments[parseInt(match[index])]);
+          actualArgs.push(arguments[parseInt(match[index])]);
         }
         else {
-          realArgs.push(undefined);
+          actualArgs.push(undefined);
         }
       }
-      return actualFunction.apply(this, realArgs);
+      return actualFunction.apply(this, actualArgs);
     }
-    throw new Error('Invalid call. Does not match pattern '+signaturePattern+'.');
+    throw new Error('Invalid call. Does not match '+JSON.stringify(argSpecs)+'.');
   };
 }
 
