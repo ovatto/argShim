@@ -14,11 +14,17 @@ function argPattern(argSpec, index) {
     if(typeof argSpec.required !== 'string') {
       throw new Error('Invalid required type at index '+index+'.');
     }
+    if(argSpec.default) {
+      throw new Error('Required argument at index '+index+' specifies a default value.');
+    }
     return "("+argSpec.required+":([0-9]+))";
   }
   if(argSpec.optional) {
     if(typeof argSpec.optional !== 'string') {
       throw new Error('Invalid required type at index '+index+'.');
+    }
+    if(argSpec.default && classOf(argSpec.default) !== argSpec.optional) {
+      throw new Error('Argument at index expects type "'+argSpec.optional+'" but default value is a "'+classOf(argSpec.default)+'".');
     }
     return "("+argSpec.optional+":([0-9]+))?";
   }
@@ -61,7 +67,8 @@ function argShim(argSpecs, actualFunction) {
           actualArgs.push(arguments[parseInt(match[index])]);
         }
         else {
-          actualArgs.push(undefined);
+          var argIndex = (index/2) - 1;
+          actualArgs.push(argSpecs[argIndex].default);
         }
       }
       return actualFunction.apply(this, actualArgs);

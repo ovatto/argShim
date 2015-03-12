@@ -29,15 +29,27 @@ describe('argShim', function() {
       });
       done();
     });
-    it('should when "optional" property is not a string', function(done) {
+    it('should throw when "optional" property is not a string', function(done) {
       should.throws(function() {
         argShim([{optional:{}}], function(){});
       });
       done();
     });
-    it('should when "required" property is not a string', function(done) {
+    it('should throw when "required" property is not a string', function(done) {
       should.throws(function() {
         argShim([{required:{}}], function(){});
+      });
+      done();
+    });
+    it('should throw when "required" property has a default value', function(done) {
+      should.throws(function() {
+        argShim([{required:'String',default:'def value'}], function(){});
+      });
+      done();
+    });
+    it('should throw when "optional" property has a default value that does not match with the type', function(done) {
+      should.throws(function() {
+        argShim([{optional:'Number',default:'def value string'}], function(){});
       });
       done();
     });
@@ -106,6 +118,30 @@ describe('argShim', function() {
           wrapped.apply(this, argSet);
         });
       });
+      done();
+    });
+    it('default parameter passing', function(done) {
+      var expectedArgs = [ 'a def value', 123, undefined ];
+      var wrapped = argShim([{optional:'String',default:'a def value'}, {optional:'Number',default:123}, {optional:'String'}], function() {
+        should(arguments.length).equal(3);
+        should(arguments[0]).equal(expectedArgs[0]);
+        should(arguments[1]).equal(expectedArgs[1]);
+        should(arguments[2]).equal(expectedArgs[2]);
+      });
+      wrapped();
+
+      expectedArgs[0] = 'first string';
+      wrapped('first string');
+
+      expectedArgs[1] = 11;
+      wrapped('first string', 11);
+
+      expectedArgs[2] = 'second string';
+      wrapped('first string', 11, 'second string');
+
+      expectedArgs[0] = 'a def value';
+      wrapped(11, 'second string');
+
       done();
     });
   });
