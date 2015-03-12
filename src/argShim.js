@@ -49,12 +49,6 @@ function getSignaturePattern(argSpecs) {
 }
 
 function argShim(argSpecs, actualFunction) {
-  if(!Array.isArray(argSpecs)) {
-    throw new Error("argSpecs must be an array.");
-  }
-  if(typeof actualFunction !== 'function') {
-    throw new Error("actualFunction must be a function.");
-  }
   var signaturePattern = getSignaturePattern(argSpecs);
   var signatureRegex = new RegExp(signaturePattern);
   return function() {
@@ -77,4 +71,4 @@ function argShim(argSpecs, actualFunction) {
   };
 }
 
-module.exports = argShim;
+module.exports = argShim([{required:'Array'},{required:'Function'}], argShim);
