@@ -26,7 +26,7 @@ function functionWithOptionalArgs(optString, optNumber, optFunction) {
 
 ## Solution
 
-The *argShim* provides a simple function wrapper that can be used for encapsulating a function call
+The **argShim** provides a simple function wrapper that can be used for encapsulating a function call
 in a way that provides a consistent way for parsing and passing optional and required
 arguments. For example:
 
@@ -50,5 +50,54 @@ fn(42, function(){});        // function called with undefined, 42, function
 fn('str', 42, function(){}); // function called with 'str', 42, function
 ```
 
-Basically *argShim* ensures that the wrapped function is always called with full list of
-arguments and all missing arguments will be passed as *undefined*.
+Basically **argShim** ensures that the wrapped function is always called with full list of
+arguments and all missing arguments will be passed as **undefined**.
+
+Required arguments can be specified by using **required** attribute on the argument specification
+objects:
+
+```javascript
+...
+var argSpecs = [
+  {optional:'String'},
+  {required:'Number'},
+  {optional:'Function'}
+];
+var fn = argShim(argSpecs, functionWithOptionalArgs);
+fn('str');                   // throws an error, required number is missing
+fn(42);                      // function called with undefined, 42, undefined
+fn(function(){});            // throws an error, required number is missing
+fn(42, function(){});        // function called with undefined, 42, function
+fn('str', 42, function(){}); // function called with 'str', 42, function
+```
+
+## Module API
+
+The **argShim** module exports a single function that has the following signature:
+
+```javascript
+argShim(argSpecs, wrappedFunction)
+```
+
+### Parameters
+
+**argSpecs**
+An array of objects that defined the arguments for the function. Each object must have
+either **required** or **optional** property and the property value defines the class
+that can be accepted as the parameter at the given slot.
+
+**wrappedFunction
+Function that will be called with the parsed arguments.
+
+### Description
+
+The return value of the **argShim** call is a new function that will accept all calls
+that specify the required and optional parameters. Issues a valid call the function will
+call the wrapped function with a value for each parameter. Missing parameters will
+have value **undefined**.
+
+If **argShim** is called with invalid parameters (e.g. with a non-array as the first parameter
+or without the wrapped function) the function will throw an **Error**.
+
+The resulting function will also throw an **Error** if the function is called with
+arguments that do not match with the specified argument array.
