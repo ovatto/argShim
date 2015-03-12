@@ -17,7 +17,7 @@ function argPattern(argSpec, index) {
     if(argSpec.default) {
       throw new Error('Required argument at index '+index+' specifies a default value.');
     }
-    return "("+argSpec.required+":([0-9]+))";
+    return "(\\["+argSpec.required+":([0-9]+)\\])";
   }
   if(argSpec.optional) {
     if(typeof argSpec.optional !== 'string') {
@@ -26,7 +26,7 @@ function argPattern(argSpec, index) {
     if(argSpec.default && classOf(argSpec.default) !== argSpec.optional) {
       throw new Error('Argument at index expects type "'+argSpec.optional+'" but default value is a "'+classOf(argSpec.default)+'".');
     }
-    return "("+argSpec.optional+":([0-9]+))?";
+    return "(\\["+argSpec.optional+":([0-9]+)\\])?";
   }
   throw new Error('Invalid argument spec at index '+index+': missing either required or optional type.');
 }
@@ -34,7 +34,7 @@ function argPattern(argSpec, index) {
 function getCallSignature(callArguments) {
   var callSignature = "";
   for(var i=0; i<callArguments.length; i++) {
-    callSignature += classOf(callArguments[i])+":"+i;
+    callSignature += "["+classOf(callArguments[i])+":"+i+"]";
   }
   return callSignature;
 }
