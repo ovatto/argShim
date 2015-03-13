@@ -1,6 +1,6 @@
 {
   "name": "argshim",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "JavaScript module for handling properly typed optional function arguments",
   "main": "src/argShim.js",
   "scripts": {

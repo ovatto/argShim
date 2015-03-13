@@ -100,12 +100,12 @@ argShim(argSpecs, wrappedFunction)
 
 **argSpecs**:
 An array of objects that define the arguments for the resulting function. Each object must
-have either 1) **required** or 2) **optional** property and the property value must be a
-string that defines the name of the class for the object that can be accepted as the
-parameter at the given slot. If argument is optional it can specify an additional property
-called **default** that will be passed instead of the **undefined** when optional argument
-is missing from the call. The value must have the same type that was specified in the
-**optional** string.
+have either 1) **required** or 2) **optional** property and the property value must be 1) a
+string that defines the name of the class for the object or 2) an array of strings that
+defines all types for the object that can be accepted as the parameter at the given slot.
+If argument is optional it can specify an additional property called **default** that will
+be passed instead of the **undefined** when optional argument is missing from the call. The
+value must have the same type that was specified in the **optional** string or string array.
 
 **wrappedFunction**:
 Function that will be called with the parsed arguments.
@@ -117,8 +117,9 @@ that specify the required and optional parameters. Issued a valid call the funct
 call the wrapped function with a value for each parameter. Missing parameters will
 have value **undefined**.
 
+The resulting function will throw an **Error** if the function is called with
+arguments that do not match with the specified argument array.
+
 If **argShim** is called with invalid parameters (e.g. with a non-array as the first parameter
 or without the wrapped function) the function will throw an **Error**.
 
-The resulting function will also throw an **Error** if the function is called with
-arguments that do not match with the specified argument array.
