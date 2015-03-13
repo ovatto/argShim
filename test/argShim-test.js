@@ -251,6 +251,14 @@ describe('argShim', function() {
       should(wrapped()).equal('the value from wrapped function');
       done();
     });
+    it('should allow null values for any type', function(done) {
+      var wrapped = argShim([{required:'String'},{optional:'Number'}], function(str, num) {
+        should.equal(str, null);
+        should.equal(num, null);
+      });
+      wrapped(null, null);
+      done();
+    });
   });
 
 });

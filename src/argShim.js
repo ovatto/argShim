@@ -49,13 +49,13 @@ function argPattern(argSpec, index) {
     if(argSpec.default) {
       throw new Error('Required argument at index '+index+' specifies a default value.');
     }
-    return "(\\[("+getTypePattern(argSpec.required, index)+"):([0-9]+)\\])";
+    return "(\\[("+getTypePattern(argSpec.required, index)+"|Null):([0-9]+)\\])";
   }
   if(argSpec.optional) {
     if(argSpec.default && !isOfType(argSpec.optional, argSpec.default)) {
       throw new Error('Argument at index expects type "'+argSpec.optional+'" but default value is a "'+typeOf(argSpec.default)+'".');
     }
-    return "(\\[("+getTypePattern(argSpec.optional)+"):([0-9]+)\\])?";
+    return "(\\[("+getTypePattern(argSpec.optional)+"|Null):([0-9]+)\\])?";
   }
   throw new Error('Invalid argument spec at index '+index+': missing either required or optional type.');
 }
