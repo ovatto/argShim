@@ -1,11 +1,11 @@
 'use strict';
 
-function classOf(obj) {
+function typeOf(obj) {
   return Object.prototype.toString.call(obj).match(/\s(\w+)/)[1];
 }
 
 function isOfType(type, obj) {
-  var objType = classOf(obj);
+  var objType = typeOf(obj);
   if(typeof type === 'string') {
     return objType === type;
   }
@@ -53,7 +53,7 @@ function argPattern(argSpec, index) {
   }
   if(argSpec.optional) {
     if(argSpec.default && !isOfType(argSpec.optional, argSpec.default)) {
-      throw new Error('Argument at index expects type "'+argSpec.optional+'" but default value is a "'+classOf(argSpec.default)+'".');
+      throw new Error('Argument at index expects type "'+argSpec.optional+'" but default value is a "'+typeOf(argSpec.default)+'".');
     }
     return "(\\[("+getTypePattern(argSpec.optional)+"):([0-9]+)\\])?";
   }
@@ -63,7 +63,7 @@ function argPattern(argSpec, index) {
 function getCallSignature(callArguments) {
   var callSignature = "";
   for(var i=0; i<callArguments.length; i++) {
-    callSignature += "["+classOf(callArguments[i])+":"+i+"]";
+    callSignature += "["+typeOf(callArguments[i])+":"+i+"]";
   }
   return callSignature;
 }
