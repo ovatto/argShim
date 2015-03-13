@@ -5,25 +5,25 @@ var should  = require('should');
 
 describe('argShim', function() {
   describe('Invalid parameter handling', function() {
-    it('should throw an error when argument spec is missing', function(done) {
+    it('should throw when argument spec is missing', function(done) {
       should.throws(function() {
         argShim(function(){});
       });
       done();
     });
-    it('should throw an error when wrapped function is missing', function(done) {
+    it('should throw when wrapped function is missing', function(done) {
       should.throws(function() {
         argShim([{required:'SomeClass'}]);
       });
       done();
     });
-    it('should throw an error when any of the given arguments are conflicting', function(done) {
+    it('should throw when any of the given arguments are conflicting', function(done) {
       should.throws(function() {
         argShim([{optional:'SomeClass', required:'SomeClass'}], function(){});
       });
       done();
     });
-    it('should throw an error when any of the given arguments are invalid (i.e. missing "required" or "optional")', function(done) {
+    it('should throw when any of the given arguments are invalid (i.e. missing "required" or "optional")', function(done) {
       should.throws(function() {
         argShim([{}], function(){});
       });
@@ -120,7 +120,7 @@ describe('argShim', function() {
       });
       done();
     });
-    it('default parameter passing', function(done) {
+    it('should pass the default parameters', function(done) {
       var expectedArgs = [ 'a def value', 123, undefined ];
       var wrapped = argShim([{optional:'String',default:'a def value'}, {optional:'Number',default:123}, {optional:'String'}], function() {
         should(arguments.length).equal(3);
@@ -142,6 +142,31 @@ describe('argShim', function() {
       expectedArgs[0] = 'a def value';
       wrapped(11, 'second string');
 
+      done();
+    });
+    it('should allow multiple optional argument types', function(done) {
+      var wrapped = argShim([{optional:['String','Number']}], function(optionalStringOrNumber) {
+        (typeof optionalStringOrNumber).should.match(/^string|number$/);
+      });
+      should.doesNotThrow(function() {
+        wrapped('a string value');
+        wrapped(42);
+      });
+      done();
+    });
+    it('should allow defaults with multiple optional argument types', function(done) {
+      var wrapped = argShim([{optional:['String','Number'],default:42}], function(optionalStringOrNumber) {
+        optionalStringOrNumber.should.be.equal(42);
+      });
+      should.doesNotThrow(function() {
+        wrapped();
+      });
+      done();
+    });
+    it('should verify the default with multiple optional argument types', function(done) {
+      should.throws(function() {
+        argShim([{optional:['String','Number'],default:function(){}}], function() {});
+      });
       done();
     });
   });

@@ -4,6 +4,41 @@ function classOf(obj) {
   return Object.prototype.toString.call(obj).match(/\s(\w+)/)[1];
 }
 
+function isOfType(type, obj) {
+  var objType = classOf(obj);
+  if(typeof type === 'string') {
+    return objType === type;
+  }
+  if(Array.isArray(type)) {
+    for(var i=0; i<type.length; i++) {
+      if(objType === type[i]) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function getTypePattern(type, index) {
+  if(typeof type === 'string') {
+    return type;
+  }
+  if(Array.isArray(type)) {
+    var pattern = "";
+    type.forEach(function(singleType, index) {
+      if(typeof singleType !== 'string') {
+        throw new Error('Invalid type in type array at index '+index+'.');
+      }
+      if(index > 0) {
+        pattern += "|";
+      }
+      pattern += singleType;
+    });
+    return pattern;
+  }
+  throw new Error('Invalid type at index '+index+'.');
+}
+
 function argPattern(argSpec, index) {
   if(argSpec.required && argSpec.optional) {
     throw new Error('Conflicting argument spec at index '+index+
@@ -11,22 +46,16 @@ function argPattern(argSpec, index) {
                     ' while specifying optional '+argSpec.optional+'.');
   }
   if(argSpec.required) {
-    if(typeof argSpec.required !== 'string') {
-      throw new Error('Invalid required type at index '+index+'.');
-    }
     if(argSpec.default) {
       throw new Error('Required argument at index '+index+' specifies a default value.');
     }
-    return "(\\["+argSpec.required+":([0-9]+)\\])";
+    return "(\\[("+getTypePattern(argSpec.required, index)+"):([0-9]+)\\])";
   }
   if(argSpec.optional) {
-    if(typeof argSpec.optional !== 'string') {
-      throw new Error('Invalid optional type at index '+index+'.');
-    }
-    if(argSpec.default && classOf(argSpec.default) !== argSpec.optional) {
+    if(argSpec.default && !isOfType(argSpec.optional, argSpec.default)) {
       throw new Error('Argument at index expects type "'+argSpec.optional+'" but default value is a "'+classOf(argSpec.default)+'".');
     }
-    return "(\\["+argSpec.optional+":([0-9]+)\\])?";
+    return "(\\[("+getTypePattern(argSpec.optional)+"):([0-9]+)\\])?";
   }
   throw new Error('Invalid argument spec at index '+index+': missing either required or optional type.');
 }
@@ -45,6 +74,7 @@ function getSignaturePattern(argSpecs) {
     signaturePattern += argPattern(argSpec, index);
   });
   signaturePattern += "$";
+  console.log("signaturePattern: ",signaturePattern);
   return signaturePattern;
 }
 
@@ -56,12 +86,12 @@ function argShim(argSpecs, actualFunction) {
     var match = signatureRegex.exec(callSignature);
     if(match) {
       var actualArgs = [];
-      for(var index=2; index<match.length; index+=2) {
+      for(var index=3; index<match.length; index+=3) {
         if(match[index]) {
           actualArgs.push(arguments[parseInt(match[index])]);
         }
         else {
-          var argIndex = (index/2) - 1;
+          var argIndex = (index/3) - 1;
           actualArgs.push(argSpecs[argIndex].default);
         }
       }
