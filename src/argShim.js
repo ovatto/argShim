@@ -29,10 +29,7 @@ function getTypePattern(type, index) {
       if(typeof singleType !== 'string') {
         throw new Error('Invalid type in type array at index '+index+'.');
       }
-      if(index > 0) {
-        pattern += "|";
-      }
-      pattern += singleType;
+      pattern += (index > 0 ? "|" : "") + singleType;
     });
     return pattern;
   }
@@ -40,12 +37,10 @@ function getTypePattern(type, index) {
 }
 
 function argPattern(argSpec, index) {
-  if(argSpec.required && argSpec.optional) {
-    throw new Error('Conflicting argument spec at index '+index+
-                    ': required '+argSpec.required+
-                    ' while specifying optional '+argSpec.optional+'.');
-  }
   if(argSpec.required) {
+    if(argSpec.optional) {
+      throw new Error('Argument at index '+index+' specifies both required and optional types.');
+    }
     if(argSpec.default) {
       throw new Error('Required argument at index '+index+' specifies a default value.');
     }
@@ -60,14 +55,6 @@ function argPattern(argSpec, index) {
   throw new Error('Invalid argument spec at index '+index+': missing either required or optional type.');
 }
 
-function getCallSignature(callArguments) {
-  var callSignature = "";
-  for(var i=0; i<callArguments.length; i++) {
-    callSignature += "["+typeOf(callArguments[i])+":"+i+"]";
-  }
-  return callSignature;
-}
-
 function getSignaturePattern(argSpecs) {
   var signaturePattern = "^";
   argSpecs.forEach(function(argSpec, index) {
@@ -75,6 +62,14 @@ function getSignaturePattern(argSpecs) {
   });
   signaturePattern += "$";
   return signaturePattern;
+}
+
+function getCallSignature(callArguments) {
+  var callSignature = "";
+  for(var i=0; i<callArguments.length; i++) {
+    callSignature += "["+typeOf(callArguments[i])+":"+i+"]";
+  }
+  return callSignature;
 }
 
 function argShim(argSpecs, actualFunction) {
