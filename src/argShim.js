@@ -74,7 +74,6 @@ function getSignaturePattern(argSpecs) {
     signaturePattern += argPattern(argSpec, index);
   });
   signaturePattern += "$";
-  console.log("signaturePattern: ",signaturePattern);
   return signaturePattern;
 }
 
